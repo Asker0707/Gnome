@@ -1,4 +1,4 @@
-import { Game } from '../index.js';
+import { Game } from '../js/Gnome.js';
 describe('Game', () => {
   let game;
   let gameContainer;
