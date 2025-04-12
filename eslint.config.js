@@ -3,7 +3,7 @@ import js from "@eslint/js";
 import globals from "globals";
 export default defineConfig([
   {
-    ignores: ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/build/**", "**/src/**", "**/jest.config.js**/"]
+    ignores: ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/build/**", "**/__tests__/**", "**/jest.config.js**/"]
   },
   {
     files: ["**/*.{js,mjs,cjs}"],
