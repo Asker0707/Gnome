@@ -1,14 +1,16 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import process from 'node:process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export default {
   entry: './src/index.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'js/[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/gnome-game/',
+    publicPath: '/',
     clean: true,
   },
   module: {
@@ -16,28 +18,48 @@ export default {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          configFile: path.resolve(__dirname, '.babelrc')
+        use: {
+          loader: 'babel-loader',
+          options: {
+            configFile: path.resolve(__dirname, '.babelrc')
+          }
         }
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-            },
-          },
-        ],
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[hash][ext]'
+        }
       },
     ],
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+      },
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[contenthash].css',
+    }),
+  ],
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   devServer: {
     static: {
       directory: path.join(__dirname, 'dist'),
@@ -47,10 +69,4 @@ export default {
     historyApiFallback: true,
     open: true,
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-    }),
-  ],
-  mode: 'development',
 };

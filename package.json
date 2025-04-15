@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "scripts": {
+ "scripts": {
     "test": "jest --env=jsdom",
-    "build": "webpack --mode production",
+    "build": "NODE_ENV=production webpack",
+    "build:dev": "webpack",
     "lint": "eslint .",
     "dev": "webpack serve",
-    "deploy": "push-dir --dir=dist --branch=gh-pages --force --verbose"
+    "deploy": "npm run build && push-dir --dir=dist --branch=gh-pages --force --verbose"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "globals": "^13.22.0",
     "html-webpack-plugin": "^5.5.3",
     "jest-environment-jsdom": "^29.7.0",
+    "mini-css-extract-plugin": "^2.9.2",
     "style-loader": "^3.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
